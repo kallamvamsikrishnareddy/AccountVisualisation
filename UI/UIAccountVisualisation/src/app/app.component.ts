@@ -1,77 +1,58 @@
 import { Component,OnInit } from '@angular/core';
-import { koreBotChat } from '../assets/chatWindow.js';
-import { koreAnonymousFn } from '../assets/anonymousassertion.js';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
+import * as $ from 'jquery';
+import * as _ from 'lodash';
+
+import { koreBotChat } from '../assets/chatWindow';
+import { koreAnonymousFn } from '../assets/anonymousassertion';
 import { reject } from 'q';
-import { HttpClient } from '@angular/common/http';
-import * as $ from '../assets/libs/jquery';
+
+
 //import { Options } from 'selenium-webdriver/opera';
 
 declare var koreBotChat:any;
 declare var koreAnonymousFn:any;
-var koreBot = koreBotChat();
+declare var JSON: any;
+//var koreBot = koreBotChat();
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent implements OnInit{  
-  chatConfig: any;  
-  botOptions: any;
-  anonymousFn: any;
+  public chatConfig: any;  
+  public botOptions: any;
+  public anonymousFn: any;
+  public koreBot: any;
+  
   constructor(private http: HttpClient){
+      this.initBotOptions();
+  } //end of constructor 
+  
+  ngOnInit(){
+    
+  } // end of Init
+
+  initBotOptions() {
     //this.koreBot=koreBotChat();
     this.botOptions = {
       logLevel: "debug",
-      botInfo: {name:"BPMBot","_id":"st-9a32815d-9414-5258-9538-f317afbcc9bf"}, // bot name is case sensitive
+      botInfo: {name:"BPMBot",_id:"st-9a32815d-9414-5258-9538-f317afbcc9bf"}, // bot name is case sensitive
       clientId: "cs-ab016638-fb6d-5270-babc-0af6e9cda43d",
       clientSecret: "ElBU2Nq9NqMO7vB8hMiuQV2kbLWtiVFNotjDM25w0TQ=",
       koreAPIUrl: "https://bots.kore.ai/api/",
       koreSpeechAPIUrl: "https://speech.kore.ai/",
       ttsSocketUrl: 'wss://speech.kore.ai/tts/ws',
-      recorderWorkerPath: '../libs/recorderWorker.js',
+      recorderWorkerPath: '../assets/libs/recorderWorker.js',
       userIdentity: 'vamsi.kallam@hcl.com',// Provide users email id here
-      JWTUrl: 'http://localhost:8082/jwtToken'
+      //JWTUrl: 'http://localhost:8082/jwtToken'
     }
-  } //end of constructor 
-  
-  ngOnInit(){
     this.botOptions.assertionFn = this.assertionFn;
-    this.botOptions.koreAnonymousFn = koreAnonymousFn;    
-  } // end of Init
+    this.botOptions.koreAnonymousFn = koreAnonymousFn; 
 
-  assertionFn(options, callback) {
-    var jsonData = {
-      "clientId": options.clientId,
-      "clientSecret": options.clientSecret,
-      "identity": options.userIdentity,
-      "aud": "",
-      "isAnonymous": false
-    };
-    $.ajax({
-      url: options.JWTUrl,
-      type: 'post',
-      data: jsonData,
-      dataType: 'json',
-      success: function (data) {
-        options.assertion = data.token;
-        options.handleError = koreBot.showError;
-        options.chatHistory = koreBot.chatHistory;
-        options.botDetails = koreBot.botDetails;
-        callback(null, options);
-        setTimeout(function () {
-          if (koreBot && koreBot.initToken) {
-            koreBot.initToken(options);            
-          }
-        }, 2000);
-      },
-      error: function (err) {
-        koreBot.showError(err.responseText);
-      }
-    });        
-  } //end of assertion
-
-  assertion(){
-     this.chatConfig={
+    this.chatConfig={
       botOptions:this.botOptions,
       allowIframe: false,
       isSendButton: false,
@@ -83,9 +64,50 @@ export class AppComponent implements OnInit{
       messageHistoryLimit: 10,
       autoEnableSpeechAndTTS: false,
       graphLib: "d3"
-    };    
-    koreBot.show(this.chatConfig);
+    }; 
+  }
+
+  public assertionFn(options, callback) {
+    //this.koreBot=koreBotChat();
+    var jsonData = {
+      clientId: 'cs-ab016638-fb6d-5270-babc-0af6e9cda43d',
+      clientSecret: 'ElBU2Nq9NqMO7vB8hMiuQV2kbLWtiVFNotjDM25w0TQ=',
+      identity: 'vamsi.kallam@hcl.com',
+      aud: "",
+      isAnonymous: true
+    };
+    $.ajax({
+      url: 'http://localhost:8082/jwtToken',
+      type: 'post',
+      headers:  {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify(jsonData),
+      dataType: 'json',
+      success: function (data) {
+        this.koreBot = koreBotChat();
+        options.assertion = data.token;
+        options.handleError = this.koreBot.showError;
+        options.chatHistory = this.koreBot.chatHistory;
+        options.botDetails = this.koreBot.botDetails;
+        callback(null, options);
+        setTimeout(function () {
+          this.koreBot = koreBotChat(); 
+          if (this.koreBot && this.koreBot.initToken) {
+            this.koreBot.initToken(options);            
+          }
+        }, 2000);
+      },
+      error: function (err) {
+        this.koreBot.showError(err.responseText);
+      }
+    });        
+  } //end of assertion
+
+  public assertion(){    
+    this.koreBot = koreBotChat();  
+    this.koreBot.show(this.chatConfig);
   }
 
 } //end of class
-
