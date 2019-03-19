@@ -1,5 +1,6 @@
 import { Component,OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { MatSidenavModule, MatToolbarModule, MatListModule, MatCardModule } from '@angular/material';
 
 import * as $ from 'jquery';
 import * as _ from 'lodash';

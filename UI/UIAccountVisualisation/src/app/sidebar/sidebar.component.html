@@ -1,0 +1,18 @@
+<div>
+  <!-- Tool bar-->
+  <mat-toolbar class="toolbar">
+    <span>Account Visualisation</span>
+  </mat-toolbar>
+  <!--The content below is only a placeholder and can be replaced.-->
+  <mat-sidenav-container class="sidenavcont">
+    <mat-sidenav mode="side" opened class="sidemenu">
+        <mat-nav-list>
+            <a mat-list-item routerLink='/technologymaturity'>Technology Maturity</a>
+            <a mat-list-item routerLink='/sapiance'>Sapiance Report</a>
+        </mat-nav-list>
+    </mat-sidenav>  
+    <mat-sidenav-content>
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
