@@ -6,7 +6,7 @@ import { SapianceComponent } from './sapiance/sapiance.component';
 const routes: Routes = [
   {path: "", component: TechnologyMaturityComponent},
   {path: 'technologymaturity', component: TechnologyMaturityComponent},
-  {path: 'sapiance', component: SapianceComponent}
+  {path: 'sapiancereport', component: SapianceComponent}
 ];
 
 @NgModule({

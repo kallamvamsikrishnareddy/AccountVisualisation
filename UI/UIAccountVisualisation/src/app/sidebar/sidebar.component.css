@@ -1,10 +1,28 @@
 mat-toolbar{
-    background-color: blue;
+    background-color: wheat;
+}
+mat-sidenav{
+    background-color: wheat;
 }
 mat-sidenav-container{
-    position: fixed;
+    position: absolute;
     height: 100%;
     min-height: 100%;
     width: 100%;
     min-width: 100%;
+}
+.chat{
+    position: absolute;
+    bottom: 5%;
+    right : 5%;
+}
+.menupadding{    
+    margin-left: 5%;    
+}
+.navlistitem:hover{
+   background-color: lightgrey;
+   font-weight: bold;
+}
+.is-active {
+    background-color: grey;
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-sapiance',
@@ -6,10 +6,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./sapiance.component.css']
 })
 export class SapianceComponent implements OnInit {
-
-  constructor() { }
+  @Output() menuTitle = new EventEmitter<String>();
+  constructor() { 
+    //this.menuTitle.emit("Sapiance Report");
+  }
 
   ngOnInit() {
+    
+  }
+  sendMenu(){
+    // this.menuTitle.emit("Sapiance Report");
   }
 
 }
